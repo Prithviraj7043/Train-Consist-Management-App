@@ -1,4 +1,29 @@
 import java.util.LinkedList;
+import java.util.Queue;
+
+// Represents a request to add a bogie
+class BogieRequest {
+    private final String bogieId;
+    private final String bogieType;
+
+    public BogieRequest(String bogieId, String bogieType) {
+        this.bogieId = bogieId;
+        this.bogieType = bogieType;
+    }
+
+    public String getBogieId() {
+        return bogieId;
+    }
+
+    public String getBogieType() {
+        return bogieType;
+    }
+
+    @Override
+    public String toString() {
+        return "BogieRequest [ID=" + bogieId + ", Type=" + bogieType + "]";
+    }
+}
 
 public class TrainConsistApp {
 
@@ -6,35 +31,28 @@ public class TrainConsistApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // Create LinkedList for Train Consist
-        LinkedList<String> trainConsist = new LinkedList<>();
+        // Queue to handle incoming bogie attachment requests
+        Queue<BogieRequest> requestQueue = new LinkedList<>();
 
-        // Add bogies
-        trainConsist.add("Engine");
-        trainConsist.add("Sleeper");
-        trainConsist.add("AC");
-        trainConsist.add("Cargo");
-        trainConsist.add("Guard");
+        // Step 1: Add requests (simulating user/system input)
+        requestQueue.add(new BogieRequest("BG101", "Sleeper"));
+        requestQueue.add(new BogieRequest("BG102", "AC Chair"));
+        requestQueue.add(new BogieRequest("BG103", "Cargo"));
+        requestQueue.add(new BogieRequest("BG104", "First Class"));
 
-        System.out.println("\nInitial Train Consist:");
-        System.out.println(trainConsist);
+        // Step 2: Display all requests in order
+        System.out.println("\nBogie attachment requests (FIFO order):");
+        for (BogieRequest req : requestQueue) {
+            System.out.println(req);
+        }
 
-        // Insert Pantry Car at position 2 (index 1-based → index 1 or 2 depending interpretation)
-        trainConsist.add(2, "Pantry Car");
+        // Step 3: Show next request (without removing)
+        System.out.println("\nNext request to process:");
+        System.out.println(requestQueue.peek());
 
-        System.out.println("\nAfter adding Pantry Car at position 2:");
-        System.out.println(trainConsist);
+        // No actual attachment to train yet
+        System.out.println("\nRequests are queued and waiting for processing...");
 
-        // Remove first and last bogie
-        trainConsist.removeFirst();
-        trainConsist.removeLast();
-
-        System.out.println("\nAfter removing first and last bogie:");
-        System.out.println(trainConsist);
-
-        System.out.println("\nFinal Train Consist:");
-        System.out.println(trainConsist);
-
-        System.out.println("\nSystem ready for further operations.");
+        System.out.println("\nSystem ready for allocation phase.");
     }
 }
