@@ -1,7 +1,6 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
-// Represents a request to add a bogie
+// Represents a bogie request
 class BogieRequest {
     private final String bogieId;
     private final String bogieType;
@@ -18,41 +17,69 @@ class BogieRequest {
     public String getBogieType() {
         return bogieType;
     }
-
-    @Override
-    public String toString() {
-        return "BogieRequest [ID=" + bogieId + ", Type=" + bogieType + "]";
-    }
 }
 
+// Main Application
 public class TrainConsistApp {
 
     public static void main(String[] args) {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // Queue to handle incoming bogie attachment requests
+        // UC5: Queue (incoming requests)
         Queue<BogieRequest> requestQueue = new LinkedList<>();
-
-        // Step 1: Add requests (simulating user/system input)
         requestQueue.add(new BogieRequest("BG101", "Sleeper"));
-        requestQueue.add(new BogieRequest("BG102", "AC Chair"));
+        requestQueue.add(new BogieRequest("BG102", "AC"));
         requestQueue.add(new BogieRequest("BG103", "Cargo"));
-        requestQueue.add(new BogieRequest("BG104", "First Class"));
+        requestQueue.add(new BogieRequest("BG101", "Sleeper")); // Duplicate ID
 
-        // Step 2: Display all requests in order
-        System.out.println("\nBogie attachment requests (FIFO order):");
-        for (BogieRequest req : requestQueue) {
-            System.out.println(req);
+        // UC6: Track allocated bogie IDs (Uniqueness)
+        Set<String> allocatedBogieIds = new HashSet<>();
+
+        // UC6: Map bogie type → allocated IDs
+        Map<String, Set<String>> bogieAllocationMap = new HashMap<>();
+
+        // UC4 reused: Maintain ordered consist
+        LinkedList<String> trainConsist = new LinkedList<>();
+
+        // Process Queue (FIFO)
+        System.out.println("\nProcessing bogie requests...\n");
+
+        while (!requestQueue.isEmpty()) {
+
+            BogieRequest request = requestQueue.poll();
+            String id = request.getBogieId();
+            String type = request.getBogieType();
+
+            // Check for duplicate bogie ID
+            if (allocatedBogieIds.contains(id)) {
+                System.out.println("Duplicate Bogie ID detected: " + id + " → Skipping");
+                continue;
+            }
+
+            // Allocate bogie
+            allocatedBogieIds.add(id);
+
+            // Update Map (type → IDs)
+            bogieAllocationMap.putIfAbsent(type, new HashSet<>());
+            bogieAllocationMap.get(type).add(id);
+
+            // Update Train Consist (order maintained)
+            trainConsist.add(type + "-" + id);
+
+            System.out.println("Allocated Bogie: " + type + " (" + id + ")");
         }
 
-        // Step 3: Show next request (without removing)
-        System.out.println("\nNext request to process:");
-        System.out.println(requestQueue.peek());
+        // Final Outputs
+        System.out.println("\nFinal Train Consist:");
+        System.out.println(trainConsist);
 
-        // No actual attachment to train yet
-        System.out.println("\nRequests are queued and waiting for processing...");
+        System.out.println("\nAllocated Bogie IDs:");
+        System.out.println(allocatedBogieIds);
 
-        System.out.println("\nSystem ready for allocation phase.");
+        System.out.println("\nBogie Type Mapping:");
+        System.out.println(bogieAllocationMap);
+
+        System.out.println("\nSystem allocation complete.");
     }
 }
