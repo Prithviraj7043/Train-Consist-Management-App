@@ -1,85 +1,58 @@
 import java.util.*;
 
-// Represents a bogie request
-class BogieRequest {
-    private final String bogieId;
-    private final String bogieType;
+// Bogie class with name and capacity
+class Bogie {
+    private String name;
+    private int capacity;
 
-    public BogieRequest(String bogieId, String bogieType) {
-        this.bogieId = bogieId;
-        this.bogieType = bogieType;
+    public Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
     }
 
-    public String getBogieId() {
-        return bogieId;
+    public String getName() {
+        return name;
     }
 
-    public String getBogieType() {
-        return bogieType;
+    public int getCapacity() {
+        return capacity;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Capacity: " + capacity + ")";
     }
 }
 
-// Main Application
 public class TrainConsistApp {
 
     public static void main(String[] args) {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // UC5: Queue (incoming requests)
-        Queue<BogieRequest> requestQueue = new LinkedList<>();
-        requestQueue.add(new BogieRequest("BG101", "Sleeper"));
-        requestQueue.add(new BogieRequest("BG102", "AC"));
-        requestQueue.add(new BogieRequest("BG103", "Cargo"));
-        requestQueue.add(new BogieRequest("BG101", "Sleeper")); // Duplicate ID
+        // Create List of Bogies
+        List<Bogie> bogies = new ArrayList<>();
 
-        // UC6: Track allocated bogie IDs (Uniqueness)
-        Set<String> allocatedBogieIds = new HashSet<>();
+        // Add Passenger Bogies
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
 
-        // UC6: Map bogie type → allocated IDs
-        Map<String, Set<String>> bogieAllocationMap = new HashMap<>();
-
-        // UC4 reused: Maintain ordered consist
-        LinkedList<String> trainConsist = new LinkedList<>();
-
-        // Process Queue (FIFO)
-        System.out.println("\nProcessing bogie requests...\n");
-
-        while (!requestQueue.isEmpty()) {
-
-            BogieRequest request = requestQueue.poll();
-            String id = request.getBogieId();
-            String type = request.getBogieType();
-
-            // Check for duplicate bogie ID
-            if (allocatedBogieIds.contains(id)) {
-                System.out.println("Duplicate Bogie ID detected: " + id + " → Skipping");
-                continue;
-            }
-
-            // Allocate bogie
-            allocatedBogieIds.add(id);
-
-            // Update Map (type → IDs)
-            bogieAllocationMap.putIfAbsent(type, new HashSet<>());
-            bogieAllocationMap.get(type).add(id);
-
-            // Update Train Consist (order maintained)
-            trainConsist.add(type + "-" + id);
-
-            System.out.println("Allocated Bogie: " + type + " (" + id + ")");
+        // Display Before Sorting
+        System.out.println("\nBefore Sorting:");
+        for (Bogie b : bogies) {
+            System.out.println(b);
         }
 
-        // Final Outputs
-        System.out.println("\nFinal Train Consist:");
-        System.out.println(trainConsist);
+        // Sort using Comparator (by capacity)
+        bogies.sort(Comparator.comparingInt(Bogie::getCapacity));
 
-        System.out.println("\nAllocated Bogie IDs:");
-        System.out.println(allocatedBogieIds);
+        // Display After Sorting
+        System.out.println("\nAfter Sorting (by Capacity - Ascending):");
+        for (Bogie b : bogies) {
+            System.out.println(b);
+        }
 
-        System.out.println("\nBogie Type Mapping:");
-        System.out.println(bogieAllocationMap);
-
-        System.out.println("\nSystem allocation complete.");
+        System.out.println("\nSystem ready for planning and analysis.");
     }
 }
