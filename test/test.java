@@ -1,67 +1,57 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import java.util.*;
 
 public class test {
 
-    // Helper method to create sample data
-    private List<Bogie> createBogies() {
-        return Arrays.asList(
-                new Bogie("Sleeper", 50),
-                new Bogie("AC", 70),
-                new Bogie("General", 80),
-                new Bogie("Chair", 40)
-        );
+    // ✅ Safe assignment
+    @Test
+    public void testCargo_SafeAssignment() {
+        GoodsBogie bogie = new GoodsBogie("Cylindrical");
+        bogie.assignCargo("Petroleum");
+
+        assertEquals("Petroleum", bogie.getCargo());
     }
 
-    // ✅ Loop filtering test
+    // ❌ Unsafe assignment handled
     @Test
-    public void testLoopFilteringLogic() {
-        List<Bogie> result = TrainConsistApp.filterUsingLoop(createBogies());
-        assertEquals(2, result.size()); // 70, 80
+    public void testCargo_UnsafeAssignmentHandled() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+
+        assertDoesNotThrow(() -> {
+            bogie.assignCargo("Petroleum");
+        });
     }
 
-    // ✅ Stream filtering test
+    // ❌ Cargo should NOT be assigned after failure
     @Test
-    public void testStreamFilteringLogic() {
-        List<Bogie> result = TrainConsistApp.filterUsingStream(createBogies());
-        assertEquals(2, result.size());
+    public void testCargo_CargoNotAssignedAfterFailure() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+
+        assertNull(bogie.getCargo());
     }
 
-    // ✅ Results should match
+    // ✅ Program continues after exception
     @Test
-    public void testLoopAndStreamResultsMatch() {
-        List<Bogie> loopResult = TrainConsistApp.filterUsingLoop(createBogies());
-        List<Bogie> streamResult = TrainConsistApp.filterUsingStream(createBogies());
+    public void testCargo_ProgramContinuesAfterException() {
+        GoodsBogie b1 = new GoodsBogie("Rectangular");
+        GoodsBogie b2 = new GoodsBogie("Cylindrical");
 
-        assertEquals(loopResult.size(), streamResult.size());
+        assertDoesNotThrow(() -> {
+            b1.assignCargo("Petroleum"); // fails
+            b2.assignCargo("Petroleum"); // succeeds
+        });
+
+        assertEquals("Petroleum", b2.getCargo());
     }
 
-    // ✅ Execution time measurement
+    // ✅ Finally block execution (indirect validation)
     @Test
-    public void testExecutionTimeMeasurement() {
-        List<Bogie> bogies = createBogies();
+    public void testCargo_FinallyBlockExecution() {
+        GoodsBogie bogie = new GoodsBogie("Rectangular");
 
-        long start = System.nanoTime();
-        TrainConsistApp.filterUsingLoop(bogies);
-        long end = System.nanoTime();
-
-        long elapsed = end - start;
-
-        assertTrue(elapsed > 0);
-    }
-
-    // ✅ Large dataset test
-    @Test
-    public void testLargeDatasetProcessing() {
-        List<Bogie> bogies = new ArrayList<>();
-
-        for (int i = 0; i < 10000; i++) {
-            bogies.add(new Bogie("Passenger", (i % 100) + 1));
-        }
-
-        List<Bogie> result = TrainConsistApp.filterUsingStream(bogies);
-
-        assertTrue(result.size() > 0);
+        assertDoesNotThrow(() -> {
+            bogie.assignCargo("Petroleum");
+        });
     }
 }
