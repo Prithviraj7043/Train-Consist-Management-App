@@ -2,45 +2,28 @@ import java.util.Arrays;
 
 public class TrainConsistApp {
 
-    // 🔹 Bubble Sort implementation (manual sorting)
-    public static int[] sortPassengerBogies(int[] capacities) {
+    // 🔹 Sort bogie names using built-in Arrays.sort()
+    public static String[] sortBogieNames(String[] bogieNames) {
 
-        int n = capacities.length;
+        Arrays.sort(bogieNames); // Natural alphabetical ordering
 
-        for (int i = 0; i < n - 1; i++) {
-
-            boolean swapped = false;
-
-            for (int j = 0; j < n - i - 1; j++) {
-
-                if (capacities[j] > capacities[j + 1]) {
-
-                    // swap
-                    int temp = capacities[j];
-                    capacities[j] = capacities[j + 1];
-                    capacities[j + 1] = temp;
-
-                    swapped = true;
-                }
-            }
-
-            // If no swaps → already sorted
-            if (!swapped) {
-                break;
-            }
-        }
-
-        return capacities;
+        return bogieNames;
     }
 
     public static void main(String[] args) {
 
-        int[] capacities = {72, 56, 24, 70, 60};
+        String[] bogies = {
+                "Luxury",
+                "General",
+                "Sleeper",
+                "AC Chair",
+                "First Class"
+        };
 
-        System.out.println("Original Capacities: " + Arrays.toString(capacities));
+        System.out.println("Original Bogies: " + Arrays.toString(bogies));
 
-        int[] sorted = sortPassengerBogies(capacities);
+        String[] sorted = sortBogieNames(bogies);
 
-        System.out.println("Sorted Capacities: " + Arrays.toString(sorted));
+        System.out.println("Sorted Bogies: " + Arrays.toString(sorted));
     }
 }
