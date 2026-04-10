@@ -1,29 +1,30 @@
-import java.util.Arrays;
-
 public class TrainConsistApp {
 
-    // 🔹 Sort bogie names using built-in Arrays.sort()
-    public static String[] sortBogieNames(String[] bogieNames) {
+    // 🔹 Linear Search method
+    public static boolean searchBogie(String[] bogieIds, String key) {
 
-        Arrays.sort(bogieNames); // Natural alphabetical ordering
+        for (int i = 0; i < bogieIds.length; i++) {
 
-        return bogieNames;
+            if (bogieIds[i].equals(key)) {
+                return true; // 🔹 Early termination when found
+            }
+        }
+
+        return false; // Not found after full traversal
     }
 
     public static void main(String[] args) {
 
-        String[] bogies = {
-                "Luxury",
-                "General",
-                "Sleeper",
-                "AC Chair",
-                "First Class"
-        };
+        String[] bogies = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
-        System.out.println("Original Bogies: " + Arrays.toString(bogies));
+        String searchKey = "BG309";
 
-        String[] sorted = sortBogieNames(bogies);
+        boolean found = searchBogie(bogies, searchKey);
 
-        System.out.println("Sorted Bogies: " + Arrays.toString(sorted));
+        if (found) {
+            System.out.println("Bogie ID " + searchKey + " FOUND in system.");
+        } else {
+            System.out.println("Bogie ID " + searchKey + " NOT FOUND.");
+        }
     }
 }
