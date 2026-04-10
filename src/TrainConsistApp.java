@@ -1,27 +1,25 @@
 import java.util.*;
 import java.util.stream.Collectors;
-
-// Reusing Bogie class from UC7
 class Bogie {
-    private String name;
-    private int capacity;
+    private String type;
+    private String id;
 
-    public Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
+    public Bogie(String id, String type) {
+        this.id = id;
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public String getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return name + " (Capacity: " + capacity + ")";
+        return "Bogie{id='" + id + "', type='" + type + "'}";
     }
 }
 
@@ -29,32 +27,28 @@ public class TrainConsistApp {
 
     public static void main(String[] args) {
 
-        System.out.println("=== Train Consist Management App ===");
-
-        // UC7: Original Bogie List
+        // Step 1: Create list of bogies
         List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Second Sitting", 80));
 
-        // Display Original List
-        System.out.println("\nAll Bogies:");
-        bogies.forEach(System.out::println);
+        bogies.add(new Bogie("B1", "Sleeper"));
+        bogies.add(new Bogie("B2", "AC Chair"));
+        bogies.add(new Bogie("B3", "Sleeper"));
+        bogies.add(new Bogie("B4", "First Class"));
+        bogies.add(new Bogie("B5", "AC Chair"));
 
-        // UC8: Stream Filtering (capacity > 60)
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
+        // Step 2: Convert to stream & group by type
+        Map<String, List<Bogie>> groupedBogies =
+                bogies.stream()
+                        .collect(Collectors.groupingBy(Bogie::getType));
 
-        // Display Filtered List
-        System.out.println("\nFiltered Bogies (Capacity > 60):");
-        filteredBogies.forEach(System.out::println);
+        // Step 3: Display grouped result
+        System.out.println("Grouped Bogies by Type:");
+        groupedBogies.forEach((type, list) -> {
+            System.out.println("\nType: " + type);
+            list.forEach(System.out::println);
+        });
 
-        // Verify original list unchanged
-        System.out.println("\nOriginal Bogie List After Filtering:");
-        bogies.forEach(System.out::println);
-
-        System.out.println("\nSystem ready for advanced processing.");
+        // Step 4: Verify original list unchanged
+        System.out.println("\nOriginal List Size: " + bogies.size());
     }
 }
