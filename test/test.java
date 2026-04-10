@@ -1,57 +1,51 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import java.util.Arrays;
 
 public class test {
 
-    // ✅ Safe assignment
+    // ✅ Basic sorting test
     @Test
-    public void testCargo_SafeAssignment() {
-        GoodsBogie bogie = new GoodsBogie("Cylindrical");
-        bogie.assignCargo("Petroleum");
+    public void testSort_BasicSorting() {
+        int[] input = {72, 56, 24, 70, 60};
+        int[] expected = {24, 56, 60, 70, 72};
 
-        assertEquals("Petroleum", bogie.getCargo());
+        assertArrayEquals(expected, TrainConsistApp.sortPassengerBogies(input));
     }
 
-    // ❌ Unsafe assignment handled
+    // ✅ Already sorted array
     @Test
-    public void testCargo_UnsafeAssignmentHandled() {
-        GoodsBogie bogie = new GoodsBogie("Rectangular");
+    public void testSort_AlreadySortedArray() {
+        int[] input = {24, 56, 60, 70, 72};
+        int[] expected = {24, 56, 60, 70, 72};
 
-        assertDoesNotThrow(() -> {
-            bogie.assignCargo("Petroleum");
-        });
+        assertArrayEquals(expected, TrainConsistApp.sortPassengerBogies(input));
     }
 
-    // ❌ Cargo should NOT be assigned after failure
+    // ✅ Duplicate values
     @Test
-    public void testCargo_CargoNotAssignedAfterFailure() {
-        GoodsBogie bogie = new GoodsBogie("Rectangular");
-        bogie.assignCargo("Petroleum");
+    public void testSort_DuplicateValues() {
+        int[] input = {72, 56, 56, 24};
+        int[] expected = {24, 56, 56, 72};
 
-        assertNull(bogie.getCargo());
+        assertArrayEquals(expected, TrainConsistApp.sortPassengerBogies(input));
     }
 
-    // ✅ Program continues after exception
+    // ✅ Single element array
     @Test
-    public void testCargo_ProgramContinuesAfterException() {
-        GoodsBogie b1 = new GoodsBogie("Rectangular");
-        GoodsBogie b2 = new GoodsBogie("Cylindrical");
+    public void testSort_SingleElementArray() {
+        int[] input = {50};
+        int[] expected = {50};
 
-        assertDoesNotThrow(() -> {
-            b1.assignCargo("Petroleum"); // fails
-            b2.assignCargo("Petroleum"); // succeeds
-        });
-
-        assertEquals("Petroleum", b2.getCargo());
+        assertArrayEquals(expected, TrainConsistApp.sortPassengerBogies(input));
     }
 
-    // ✅ Finally block execution (indirect validation)
+    // ✅ All equal values
     @Test
-    public void testCargo_FinallyBlockExecution() {
-        GoodsBogie bogie = new GoodsBogie("Rectangular");
+    public void testSort_AllEqualValues() {
+        int[] input = {40, 40, 40};
+        int[] expected = {40, 40, 40};
 
-        assertDoesNotThrow(() -> {
-            bogie.assignCargo("Petroleum");
-        });
+        assertArrayEquals(expected, TrainConsistApp.sortPassengerBogies(input));
     }
 }
